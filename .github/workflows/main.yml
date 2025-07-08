@@ -79,11 +79,9 @@ jobs:
           ./module.zip                         \
           `# The files that will be included.` \
           module.json                          \
-          readme.md                            \
+          README.md                            \
           LICENSE                              \
-          lang/                                \
-          scripts/                             \
-          styles/                              \
+          module.js                            \
           # Don't forget to add a backslash at the end of the line for any
           # additional files or directories!
 
