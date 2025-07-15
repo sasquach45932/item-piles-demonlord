@@ -4,3 +4,10 @@ Built using the [ItemPiles System Template](https://github.com/fantasycalendar/F
 
 ## Usage
 Simply install this alongside Item Piles. Once installed and activated it will provide Item Piles with the configuration it needs to work properly in the SotDL system.
+
+Installation
+On Foundry VTT's Configuration and Setup screen, go to Add-on Modules
+Click Install Module
+In the Manifest URL field, paste: https://github.com/sasquach45932/item-piles-demonlord/releases/latest/download/module.json
+Click Install next to the pasted Manifest URL
+
