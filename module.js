@@ -137,15 +137,13 @@ Hooks.once('item-piles-ready', async () => {
 
 			libWrapper.register("item-piles-demonlord", actorSheetOverride, function (wrapped, forced, options, ...args) {
 				const renderItemPileInterface = Hooks.call(game.itempiles.CONSTANTS.HOOKS.PRE_RENDER_SHEET, this.document, forced, options) === false;
-				if (this._state > Application.RENDER_STATES.NONE) {
+
 					if (renderItemPileInterface) {
 						wrapped(forced, options, ...args)
 					} else {
 						return wrapped(forced, options, ...args)
 					}
-				}
-				if (renderItemPileInterface) return;
-				return wrapped(forced, options, ...args);
+				
 			}, "MIXED");
 		}    
   }
