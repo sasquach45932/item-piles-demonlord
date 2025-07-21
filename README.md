@@ -10,8 +10,4 @@ Simply install this alongside Item Piles. Once installed and activated it will p
 1. On Foundry VTT's **Configuration and Setup** screen, go to **Add-on Modules**
 2. Click **Install Module**
 3. In the Manifest URL field, paste: `https://github.com/sasquach45932/item-piles-demonlord/releases/latest/download/module.json`
-<<<<<<< HEAD
 4. Click **Install** next to the pasted Manifest URL
-=======
-4. Click **Install** next to the pasted Manifest URL
->>>>>>> 2f5fbca44c564e5b6ddb3304909f50fab1154843
