@@ -134,8 +134,7 @@ Hooks.once("item-piles-ready", async () => {
     SYSTEM_HOOKS: () => {
       Hooks.on("item-piles-preAddItems", (target, itemsToCreate, itemQuantitiesToUpdate, interactionId) => {
         const actor = target instanceof Actor ? target : target.actor
-        let isItemPile = actor.getFlag("item-piles", "data.enabled")
-        if (actor.type === "creature" || isItemPile) {
+        if (actor.type === "creature") {
           itemsToCreate.forEach(item => {
             if (item.system.wear) item.system.wear = false
             const itemEffects = item.effects
