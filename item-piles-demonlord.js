@@ -1,6 +1,6 @@
 Hooks.once("item-piles-ready", async () => {
   const data = {
-    VERSION: "1.0.2",
+    VERSION: "1.0.3",
 
     // The actor class type is the type of actor that will be used for the default item pile actor that is created on first item drop.
     ACTOR_CLASS_TYPE: "character",
@@ -160,6 +160,21 @@ Hooks.once("item-piles-ready", async () => {
             })
           }
         })
+      })
+
+      Hooks.on("item-piles-preTradeItems", (sellingActor, sellerUpdates, buyingActor, buyerUpdates, userId, interactionId) => {
+        let allItems = buyerUpdates.itemsToCreate
+        allItems = allItems.concat(buyerUpdates.itemsToUpdate)
+          allItems.forEach(item => {
+            const type = item.type
+            if (["armor", "item", "relic"].includes(type)) {
+              const itemEffects = item.effects
+              itemEffects.forEach(effect => {
+                console.warn('EFFECT:',effect )
+                if (effect.transfer) effect.disabled = false
+              })
+            }
+          })
       })
     },
 
