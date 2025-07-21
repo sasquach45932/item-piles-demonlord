@@ -36,6 +36,7 @@ Hooks.once("item-piles-ready", async () => {
 
     // This function is an optional system handler that specifically transforms an item when it is added to actors, eg turns it into a spell scroll if it was a spell
     ITEM_TRANSFORMER: async itemData => {
+      if (itemData.type === "weapon" || itemData.type === "armor") foundry.utils.setProperty(itemData, "system.wear", false)
       return itemData
     },
 
@@ -130,9 +131,39 @@ Hooks.once("item-piles-ready", async () => {
 
     VAULT_STYLES: [],
 
-    SYSTEM_HOOKS: () => {},
+    SYSTEM_HOOKS: () => {
+      Hooks.on("item-piles-preAddItems", (target, itemsToCreate, itemQuantitiesToUpdate, interactionId) => {
+        const actor = target instanceof Actor ? target : target.actor
+        let isItemPile = actor.getFlag("item-piles", "data.enabled")
+        if (actor.type === "creature" || isItemPile) {
+          itemsToCreate.forEach(item => {
+            if (item.system.wear) item.system.wear = false
+            const itemEffects = item.effects
+            itemEffects.forEach(effect => {
+              if (effect.transfer) effect.disabled = true
+            })
+          })
+        }
+      })
 
-    SHEET_OVERRIDES: () => {}
+      Hooks.on("item-piles-preTransferItems", (source, sourceUpdates, target, targetUpdates, interactionId) => {
+        const sourceActor = target instanceof Actor ? source : source.actor
+        const targetActor = target instanceof Actor ? target : target.actor
+        let allItems = targetUpdates.itemsToCreate
+        allItems = allItems.concat(targetUpdates.itemDeltas)
+        allItems.forEach(item => {
+          const type = item.type
+          if (["armor", "item", "relic"].includes(type)) {
+            const itemEffects = item.effects
+            itemEffects.forEach(effect => {
+              if (effect.transfer) effect.disabled = false
+            })
+          }
+        })
+      })
+    },
+
+    SHEET_OVERRIDES: () => {},
   }
 
   await game.itempiles.API.addSystemIntegration(data)
