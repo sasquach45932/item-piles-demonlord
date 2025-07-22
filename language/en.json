@@ -1,0 +1,4 @@
+{
+"item-piles-demonlord.settingitemEffects" : "Suspend / re-enable item effects ",
+"item-piles-demonlord.settingitemEffectsHint" : "Adding an item to item-pile, item effects will be suspended. \n Getting an item from item-pile previously suspended item effects will be re-enabled."
+}

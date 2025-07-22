@@ -1,3 +1,16 @@
+Hooks.once("init", () => {
+  const settingsKey = "item-piles-demonlord"
+
+  game.settings.register(settingsKey, "suspendEffect", {
+    name: game.i18n.localize(`${settingsKey}.settingitemEffects`),
+    hint: game.i18n.localize(`${settingsKey}.settingitemEffectsHint`),
+    scope: "world",
+    type: Boolean,
+    default: true,
+    config: true,
+  })
+})
+
 Hooks.once("item-piles-ready", async () => {
   const data = {
     VERSION: "1.0.3",
@@ -133,47 +146,52 @@ Hooks.once("item-piles-ready", async () => {
 
     SYSTEM_HOOKS: () => {
       Hooks.on("item-piles-preAddItems", (target, itemsToCreate, itemQuantitiesToUpdate, interactionId) => {
-        const actor = target instanceof Actor ? target : target.actor
-        if (actor.type === "creature") {
-          itemsToCreate.forEach(item => {
-            if (item.system.wear) item.system.wear = false
+        itemsToCreate.forEach(item => {
+          if (item.system.wear) item.system.wear = false
+          if (game.settings.get("item-piles-demonlord", "suspendEffect")) {
             const itemEffects = item.effects
             itemEffects.forEach(effect => {
-              if (effect.transfer) effect.disabled = true
-            })
-          })
-        }
-      })
-
-      Hooks.on("item-piles-preTransferItems", (source, sourceUpdates, target, targetUpdates, interactionId) => {
-        const sourceActor = target instanceof Actor ? source : source.actor
-        const targetActor = target instanceof Actor ? target : target.actor
-        let allItems = targetUpdates.itemsToCreate
-        allItems = allItems.concat(targetUpdates.itemDeltas)
-        allItems.forEach(item => {
-          const type = item.type
-          if (["armor", "item", "relic"].includes(type)) {
-            const itemEffects = item.effects
-            itemEffects.forEach(effect => {
-              if (effect.transfer) effect.disabled = false
+              if (effect.transfer) {
+                effect.disabled = true
+                Object.assign(effect.flags, { itempilesdemonlord: { suspended: true } })
+              }
             })
           }
         })
       })
 
-      Hooks.on("item-piles-preTradeItems", (sellingActor, sellerUpdates, buyingActor, buyerUpdates, userId, interactionId) => {
-        let allItems = buyerUpdates.itemsToCreate
-        allItems = allItems.concat(buyerUpdates.itemsToUpdate)
+      Hooks.on("item-piles-preTransferItems", (source, sourceUpdates, target, targetUpdates, interactionId) => {
+        if (game.settings.get("item-piles-demonlord", "suspendEffect")) {
+          let allItems = targetUpdates.itemsToCreate
+          allItems = allItems.concat(targetUpdates.itemDeltas)
           allItems.forEach(item => {
             const type = item.type
-            if (["armor", "item", "relic"].includes(type)) {
-              const itemEffects = item.effects
-              itemEffects.forEach(effect => {
-                console.warn('EFFECT:',effect )
-                if (effect.transfer) effect.disabled = false
-              })
-            }
+            const itemEffects = item.effects
+            itemEffects.forEach(effect => {
+              if (effect.transfer && effect.flags.itempilesdemonlord?.suspended) {
+                effect.disabled = false
+                delete effect.flags.itempilesdemonlord
+              }
+            })
           })
+        }
+      })
+
+      Hooks.on("item-piles-preTradeItems", (sellingActor, sellerUpdates, buyingActor, buyerUpdates, userId, interactionId) => {
+        if (game.settings.get("item-piles-demonlord", "suspendEffect")) {
+          let allItems = buyerUpdates.itemsToCreate
+          allItems = allItems.concat(buyerUpdates.itemsToUpdate)
+          allItems.forEach(item => {
+            const type = item.type
+            const itemEffects = item.effects
+            itemEffects.forEach(effect => {
+              if (effect.transfer && effect.flags.itempilesdemonlord?.suspended) {
+                effect.disabled = false
+                delete effect.flags.itempilesdemonlord
+              }
+            })
+          })
+        }
       })
     },
 

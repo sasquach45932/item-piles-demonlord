@@ -22,6 +22,13 @@
   "styles": [
     "item-piles-demonlord.css"
   ],
+   "languages":[
+      {
+         "lang":"en",
+         "name":"English",
+         "path":"language/en.json"
+      }
+   ],
   "packs": [],
   "relationships": {
     "systems": [
