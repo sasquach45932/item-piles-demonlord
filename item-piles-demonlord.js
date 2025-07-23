@@ -54,7 +54,7 @@ Hooks.once("item-piles-ready", async () => {
     },
 
     ITEM_COST_TRANSFORMER: (item, currencies) => {
-      let itemCost = item.system.value
+      let itemCost = item.system.value ? item.system.value : ""
       itemCost = itemCost.trim()
 
       let ssValue = itemCost === "" ? 0 : parseInt(itemCost.replace(/\D/g, ""))
