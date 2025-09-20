@@ -49,8 +49,8 @@
         "type": "module",
         "manifest": "https://github.com/fantasycalendar/FoundryVTT-ItemPiles/releases/latest/download/module.json",
         "compatibility": {
-          "minimum": "3.2.18",
-          "verified": "3.2.18"
+          "minimum": "3.2.27",
+          "verified": "3.2.27"
         }
       }
     ],
