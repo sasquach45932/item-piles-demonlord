@@ -13,7 +13,7 @@ Hooks.once("init", () => {
 
 Hooks.once("item-piles-ready", async () => {
   const data = {
-    VERSION: "1.0.4",
+    VERSION: "1.0.5",
 
     // The actor class type is the type of actor that will be used for the default item pile actor that is created on first item drop.
     ACTOR_CLASS_TYPE: "character",
@@ -57,10 +57,15 @@ Hooks.once("item-piles-ready", async () => {
       let itemCost = item.system.value ? item.system.value : ""
       itemCost = itemCost.trim()
 
-      let ssValue = itemCost === "" ? 0 : parseInt(itemCost.replace(/\D/g, ""))
+      let ssValue = itemCost === "" ? 0 : parseFloat(itemCost.replace(/[^\d.-]/g, ""))
+      let priceDenomination = "ss"
+      if (itemCost.toLowerCase().includes("gc")) priceDenomination = "gc"
+      else if (itemCost.toLowerCase().includes("ss")) priceDenomination = "ss"
+      else if (itemCost.toLowerCase().includes("cp")) priceDenomination = "cp"
+      else if (itemCost.toLowerCase().includes("bits")) priceDenomination = "bits"
+      else console.warn(`ItemPilesDemonLord: item ${item.name} has unknown currency: ${itemCost}!`)
 
       const overallCost = ssValue
-      let priceDenomination = itemCost.replace(/\d/g, "").trim() === "" ? "ss" : itemCost.replace(/\d/g, "").trim()
       if (priceDenomination) {
         const currencyDenomination = currencies
           .filter(currency => currency.type === "attribute")
