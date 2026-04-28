@@ -13,7 +13,7 @@ Hooks.once("init", () => {
 
 Hooks.once("item-piles-ready", async () => {
   const data = {
-    VERSION: "1.0.5",
+    VERSION: "1.0.6",
 
     // The actor class type is the type of actor that will be used for the default item pile actor that is created on first item drop.
     ACTOR_CLASS_TYPE: "character",
@@ -46,6 +46,9 @@ Hooks.once("item-piles-ready", async () => {
 
     // Item similarities determines how item piles detect similarities and differences in the system
     ITEM_SIMILARITIES: ["name", "type"],
+
+    // The types of items that will always be considered unique when transferring between actors
+    UNSTACKABLE_ITEM_TYPES: ["weapon","armor","relic"],
 
     // This function is an optional system handler that specifically transforms an item when it is added to actors, eg turns it into a spell scroll if it was a spell
     ITEM_TRANSFORMER: async itemData => {
